@@ -11,6 +11,7 @@
 #define FIREEXPAND 3
 #define FIRESHRINK 6//炎が伸び始めてから縮み切るまでの時間
 #define FIRETOP 12
+#define MAXSTAGE 2
 //マップのアイテム位置
 extern int g_mapdate[MAP_HEIGHT][MAP_WIDTH];
 enum MapItem{
@@ -34,6 +35,7 @@ struct StageDate{
     int movecounter;
     CharaDate enemies[MAXENEMY];
     BOOL getkey;
+    int stagenum;
 };
 extern StageDate g_stagedate;
 //関数プロトタイプ宣言

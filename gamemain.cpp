@@ -1,20 +1,20 @@
 #include "gamemain.h"
-int g_mapdate[MAP_HEIGHT][MAP_WIDTH] = {
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-    {1,7,0,1,0,0,0,1,0,0,0,0,0,0,0,4},
-    {1,0,1,1,0,1,0,1,0,0,0,0,0,1,0,9},
-    {,,,,,,,,,,,,,,},
-    {,,,,,,,,,,,,,,},
-    {,,,,,,,,,,,,,,},
-    {,,,,,,,,,,,,,,},
-    {,,,,,,,,,,,,,,},
-    {,,,,,,,,,,,,,,},
-    {,,,,,,,,,,,,,,},
-    {,,,,,,,,,,,,,,}
-};
+int g_mapdate[MAP_HEIGHT][MAP_WIDTH];
 StageDate g_stagedate;
 //ステージ初期化
 void InitStage(){
+    //マップデータの読み取り
+    ZeroMemory(g_stagedate.enemies,sizeof(g_stagedate.enemies));
+    char buf[256];
+    sprintf_s(buf,256,"フォルダ名¥¥ファイル名",g_stagedate.stagemnum);
+    int fh = FileRead_open(buf);//ファイルハンドル
+    for(int y = 0;y < MAP_HEIGHT;y++){
+        FileRead_gets(buf,256,fh);//一行読む
+        for(int x = 0;x < MAP_WIDTH;x++){
+            g_mapdate[y][x] = (int)(buf[x] - '0');//型変換
+        }
+    }
+    FileRead_close(fh);
     int enemy = 0;
     //各マスについて
     for(int y = 0;y<MAP_HEIGHT;y++){
@@ -111,9 +111,11 @@ void DrawGameTitle(){
         g_gamestate = GAME_MAIN;
         //ステージ初期化
         InitStage();
+        PlaySoundMem(g_sndhandles.bgm,DX_PLAYTYPE_LOOP);
     }
 }
 void DrawGameOver(){
+    StopSoundMem(g_sndhandles.bgm);
     DrawBox(0,0,800,600,GetColor(0,0,0),TRUE);
     DrawStringToHandle(100,200,"ゲームオーバー",GetColor(255,0,0),g_largefont);
     if(g_lasttime - g_timerstart > 5000)g_gamestate = GAME_TITLE;
@@ -121,7 +123,17 @@ void DrawGameOver(){
 void DrawGameClear(){
     DrawBox(0,0,800,600,GetColor(255,255,255),TRUE);
     DrawStringToHandle(100,200,"ゲームクリア",GetColor(0,0,255),g_largefont);
-    if(g_lasttime - g_timerstart > 5000)g_gamestate = GAME_TITLE;
+    if(g_lasttime - g_timerstart > 5000){
+        g_stagedate.stagenum++;
+        g_stagedate.stagenum %= MAXSTAGE;
+        if(f_stagedate.stagenum==0){
+            g_gamestate = GAME_TITLE;
+        }else{
+            g_gamestate = GAME_MAIN;
+            InitStage;
+        }
+    }
+
 }
 void DrawEnemy(){
     //すべてのモンスターについて
@@ -144,6 +156,7 @@ void DrawEnemy(){
             }
             //当たっていたらgameover
             if(g_stagedate.enemies[i].x == g_stagedate.herox&&g_stagedate.enemies[i].y==g_stagedate.heroy){
+                PlaySoundMem(g_sndhandles.gameover,DX_PLAYTPE_BACK);
                 g_gamestate = GAME_OVER;
                 g_timestart = g_lasttime;
             }
@@ -162,6 +175,7 @@ void DrawDragonFire(int idx){
                 g_stagedate.enemies[f+i].type = MT_FIRE;
                 g_stagedate.enemies[f+i].x = g_stagedate.enemies[idx].x - 1 - i;
                 g_stagedate.enemies[f+i].y = g_stagedate.enemies[idx].y;
+                PlaySoundMem(g_sndhandles.fire,DX_PLAYTYPE_BACK);
             }else{
                g_stagedate.enemies[f+i].living = FALSE;
             }
@@ -174,6 +188,7 @@ void DrawDragonFire(int idx){
                 g_stagedate.enemies[f+i].type = MT_FIRE;
                 g_stagedate.enemies[f+i].x = g_stagedate.enemies[idx].x - 1 - i;
                 g_stagedate.enemies[f+i].y = g_stagedate.enemies[idx].y;
+                PlaySoundMem(g_sndhandles.fire,DX_PLAYTYPE_BACK);
             }else{
                 g_stagedate.enemies[f+i].living = FALSE;
             }

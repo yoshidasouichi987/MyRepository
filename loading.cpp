@@ -1,5 +1,6 @@
 #include "loading.h"
-#ImageHandles g_imagehandles;
+ImageHandles g_imagehandles;
+SoundHandles g_sndhandles;
 BOOL LoadGameImage(){
     g_imghandles.field = LoadGraph("フォルダ名¥¥ファイル名");
     if(g_imghandle.field == -1)return FALSE;
@@ -23,6 +24,12 @@ BOOL LoadGameImage(){
      g_imghandles.mapitems[9] = LoadGraph("フォルダ名¥¥ファイル名");
     if(g_imghandle.mapitems[9] ==-1)return FALSE;
     
+    g_sndhandles.bgm = LoadSoundMem("フォルダ名¥¥ファイル名");
+    if(g_sndhandles.bgm==-1)return FALSE;
+    g_sndhandles.fire = LoadSoundMem("フォルダ名¥¥ファイル名");
+    if(g_sndhandles.fire==-1)return FALSE;
+    g_sndhandles.gameover = LoadSoundMem("フォルダ名¥¥ファイル名");
+    if(g_sndhandles.gameover==-1)return FALSE;
     return TRUE;
 }
 

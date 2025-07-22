@@ -28,7 +28,7 @@ struct CharaDate{
     int direction;
     int fireidx;//自身の炎が配列enemiesの何番目に格納されるかを記録
     int firetimer;//炎を出している時間のカウンタ
-}
+};
 //ステージデータ
 struct StageDate{
     int herox,heroy;

@@ -45,7 +45,7 @@ void InitStage(){
     for(int i = 0;i<MAXENEMY;i++){
         if(g_stagedate.enemies[i].type == MT_DRAGON){
             g_stagedate.enemies[i].fireidx = enemy;
-            g_stagedate.enemies[i].firetime = 0;
+            g_stagedate.enemies[i].firetimer = 0;
             enemy+=FIREEXPAND;
         }
     }
@@ -86,7 +86,7 @@ void Gamemain(){
             g_timerstart = g_lasttime;
         }
     }
-    DrawGraph(g_stagedate.heroy*MAP_CHIPSIZE,g_stagedate.herox*MAP_CHIPSIZE,g_imghandles.mapitems[MPITEM_HEROPOS],TRUE);
+    DrawGraph(g_stagedate.heroy*IMG_CHIPSIZE,g_stagedate.herox*IMG_CHIPSIZE,g_imghandles.mapitems[MPITEM_HEROPOS],TRUE);
 }
 void DrawMap(){
     for(int y = 0;y<MAP_HEIGHT;y++){
@@ -140,8 +140,7 @@ void DrawEnemy(){
     for(int i = 0;i < MAXENEMY;i++){
         //死んでいたら放置
         if(g_stagedate.enemies[i].living == FALSE)continue;
-        MonsterType c = e.type;
-        if(stagedate.movecounter == 0){
+        if(g_stagedate.movecounter == 0){
             int ex = g_stagedate.enemies[i].x;
             int ey = g_stagedate.enemies[i].y;
             //移動処理

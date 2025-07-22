@@ -14,8 +14,6 @@ enum GameState{
 //画像
 extern int g_gametitlimg;
 extern int g_heroimg;
-//座標
-extern float g_xh,g_yh;
 //ボタン状態
 extern BOOL g_akey_prev;
 //フォント

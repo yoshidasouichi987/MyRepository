@@ -12,7 +12,7 @@ enum GameState{
     GAME_TITLE,GAME_MAIN,GAME_CLEAR,GAME_OVER
 };
 //画像
-extern int g_gametitlimg;
+extern int g_gametitleimg;
 extern int g_heroimg;
 //ボタン状態
 extern BOOL g_akey_prev;

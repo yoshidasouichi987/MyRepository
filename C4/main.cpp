@@ -1,5 +1,41 @@
 #include "main.h"
 #include "loading.h"
+
+int g_lasttime;
+float g_frametime = 0;
+int g_timerstart = 0;
+BOOL g_akey_prev = FALSE;
+g_gamestate = GAME_TITLE;
+int middlefont = GetStringToHandle("メイリオ",42,-1,DX_FONTTYPE_ANTIALIASING);
+int largefont = GetStringToHandle(NULL,60,-1,DX_FONTTYPE_ANTIALIASING);
+
+int WINAPI WinMain(HINSTANCE h1,HIMSTANCE hp,LPSTR lpC,int nC){
+    ChangeWindowMode(TRUE);
+    if(DxLib_Init()==-1)return -1;
+    if(LoadGameImage()==-1)return FALSE;
+
+    SetGraphMode(800,600,32);
+    SetDrawScreen(DX_SCREEN_BACK);
+    g_lasttime = GetNowCount();
+    
+    while(ProcessMessage()==0&&CheckHitKey(KEY_INPUT_ESCAPE)==0){
+        int curtime = GetNowCount();
+        g_frametime = (g_lasttime - curtime)/1000.0f;
+        g_lasttime = curtime;
+
+        switch(g_gamestate){
+            case GAME_TITLE:DrawGameTitle();break;
+            case GAME_MAIN:DrawGameMain();break;
+            case GAME_CLEAR:DrawGameClear();break;
+            case GAME_OVER:DrawGameOver();break;
+        }
+        ScreenFlip();
+    }
+
+    WaitKey();
+    DxLib_end();
+    return 0;
+}
 void DrawGameTitle(){
     DrawGraph(0,0,g_imghandles.titile,FALSE);
     //テキスト表示
@@ -10,5 +46,16 @@ void DrawGameTitle(){
     if(IsAkeyTrigger(key)==TRUE){
         g_gamestate = GAME_MAIN;
         InitStage();
+    }
+}
+void DrawMap(){
+    int sc = (int)(g_stagedate.scrollx / IMG_CHIPSIZE);//scrollxのマス数
+    for(int y = 0;y < MAP_HEIGHT;y++){
+        for(int x = 0;x< SCR_WIDTH;x++){
+            if(x+sc>=g_stagedate.mapwidth)break;//表示されている画面について
+            if(g_mapdate[y][x+sc] == '1'){
+                DrawGraph(x*IMG_CHIPSIZE,y*IMG_CHIPSIZE,g_imghandles.block,TRUE);
+            }
+        }
     }
 }

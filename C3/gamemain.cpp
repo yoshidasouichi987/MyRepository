@@ -126,11 +126,11 @@ void DrawGameClear(){
     if(g_lasttime - g_timerstart > 5000){
         g_stagedate.stagenum++;
         g_stagedate.stagenum %= MAXSTAGE;
-        if(f_stagedate.stagenum==0){
+        if(g_stagedate.stagenum==0){
             g_gamestate = GAME_TITLE;
         }else{
             g_gamestate = GAME_MAIN;
-            InitStage;
+            InitStage();
         }
     }
 
@@ -184,7 +184,7 @@ void DrawDragonFire(int idx){
         for(int i = 0;i<FIREEXPAND;i++){//各炎につき
             if(i<=(FIRESHRINK -1 - t)){
                 g_stagedate.enemies[f+i].living = TRUE;
-                g_stagedate.enemies[f+i].type = MT_FIRE;
+                g_stagedate.enemies[f+i].type = MT_FIRE;k
                 g_stagedate.enemies[f+i].x = g_stagedate.enemies[idx].x - 1 - i;
                 g_stagedate.enemies[f+i].y = g_stagedate.enemies[idx].y;
                 PlaySoundMem(g_sndhandles.fire,DX_PLAYTYPE_BACK);
@@ -199,5 +199,5 @@ void DrawDragonFire(int idx){
         }
     }
     g_stagedate.enemies[idx].firetimer++;
-    g_stagedate.enemies[idx].firetimer%=FIRETOP;
+    g_stagedate.enemies[idx].firetimer%=FIRESTOP;
 }

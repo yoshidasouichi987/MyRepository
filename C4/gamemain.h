@@ -10,10 +10,17 @@
 #define SCR_WIDTH 16
 #define ANIM_RATE 4
 #define SCLOLL_STAPOS 500
+#define JUMP_POWER 750.0f
+#define GRAVITY 30.0f
+#define JUMP_FORWARD 200.0f
+
 extern char g_mapdate[MAP_HEIGHT][MAP_WIDTH+1];
 struct CharaDate{
     float x,y;
     BOOL turn;
+    BOOL noground;
+    BOOL jumping;
+    float jumppower,jumpforward;
 };
 struct StageDate{
     int stagenum;
@@ -23,8 +30,12 @@ struct StageDate{
     float scrollx//画面左端の座標
 };
 extern StageDate g_stagedate;
+struct AtariInfo{
+    BOOL UL,UR,DL,DR,GL,GR;
+};
 void GameMain();
 void InitStage();
 void DrawHero(int ac);
 void DrawMap();
+AtariInfo CheckBlock(float x,float y,float rx);
 #endif

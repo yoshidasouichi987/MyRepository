@@ -16,9 +16,10 @@ void InitStage(){
 }
 void GameMain(){
     g_stagedate.animcounter = (g_stagedate.animcounter+1)&MAXINT;
-    int ac = g_stagedate.animecounter/ANIM_RATE;
+    int ac = g_stagedate.animcounter/ANIM_RATE;
     DrawMap();
-    DrawHero();
+    DrawHero(ac);
+    DrawEnemy(ac);
 }
 void DrawMap(){
     int sc = (int)(g_stagedate.scrollx/IMG_CHIPSIZE);//画面左端のマス数
@@ -29,6 +30,8 @@ void DrawMap(){
             if(g_mapdate[y][x+sc]=='1'){
                 DrawGraph(x*IMG_CHIPSIZE - shiftx,y*IMG_CHIPSIZE,g_imghandles.block,TRUE);
             }
+            //モンスター検出
+            if(g_mapdate[y][x+sc] > '1')SetEnemy(x+sc,y);
         }
     }
 }
@@ -100,11 +103,11 @@ void DrawHero(int ac){
 BOOL _CheckBlockSub(float x,float y){
     int mx = (int)(x/IMG_CHIPSIZE);
     int my = (int)(y/IMG_CHIPSIZE);
-    //マップの範囲外ならTRUE
-    if((mx < 0) || (mx >= g_stagedate.mapwidth) || (my >= g_stagedate.MAP_HEIGHT)){
-        return TRUE;
+    //マップの範囲外ならFALSE
+    if((mx < 0) || (mx >= g_stagedate.mapwidth) || (my >= g_stagedate.MAP_HEIGHT)||(mv<0)){
+        return FALSE;
     }
-    if(my < 0)return FALSE;
+    //if(my < 0)return FALSE;
     if(g_mapdate[mx][my] != '0')return TRUE;
     return FALSE;
 }

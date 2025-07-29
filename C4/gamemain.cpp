@@ -13,6 +13,12 @@ void InitStage(){
     g_stagedate.hero.x = 2*IMG_CHIPSIZE;
     g_stagedate.hero.y = 10*IMG_CHIPSIZE;
     g_stagedate.hero.turn = FALSE;
+
+    ZeroMemory(g_stagedate.enemies,sizeof(g_stagedate.enemies));
+    ZeroMemory(g_stagedate.enemies,sizeof(g_stagedate.knives));
+    g_stagedate.scrollx = 0;
+
+    PlaySoundMem(g_sndhandles.bgm,DX_PLAYTYPE_LOOP);
 }
 void GameMain(){
     g_stagedate.animcounter = (g_stagedate.animcounter+1)&MAXINT;
@@ -20,6 +26,11 @@ void GameMain(){
     DrawMap();
     DrawHero(ac);
     DrawEnemy(ac);
+    //ゲームクリア処理
+    if(g_stagedate.hero.x >= (g_stagedate.mapwidth - 1)*IMG_CHIPSIZE){
+        g_gamestate = GAME_CLEAR;
+        g_timerstart = g_lasttime;
+    }
 }
 void DrawMap(){
     int sc = (int)(g_stagedate.scrollx/IMG_CHIPSIZE);//画面左端のマス数
@@ -37,6 +48,7 @@ void DrawMap(){
 }
 void DrawHero(int ac){
     int key = GetJoypadInputState(DX_INPUT_KEY_PAD1);
+    DrawKnife(key);
     float mv = g_frametime*80.0f;
     float hx = g_stagedate.hero.x;
     float hy = g_stagedate.hero.y;
@@ -107,7 +119,6 @@ BOOL _CheckBlockSub(float x,float y){
     if((mx < 0) || (mx >= g_stagedate.mapwidth) || (my >= g_stagedate.MAP_HEIGHT)||(mv<0)){
         return FALSE;
     }
-    //if(my < 0)return FALSE;
     if(g_mapdate[mx][my] != '0')return TRUE;
     return FALSE;
 }
@@ -120,4 +131,45 @@ AtariInfo CheckBlock(float x,float y,float rx){
     result.GL = _CheckBlockSub(rx,y+IMG_CHIPSIZE);
     result.GR = _CheckBlockSub(rx+IMG_CHIPSIZE-1,y+IMG_CHIPSIZE);
     return result;
+}
+void DrawKnife(int key){
+    // 発射処理
+    if(isBkeyTrigger(key)==TRUE){
+        //空きを探す
+        int i;
+        for(i = 0;i<MAX_ENEMY;i++)if(g_stagedate.knives[i].living == FALSE)break;
+            if(i<MAX_ENEMY){
+            g_stagedate.knives[i].living == TRUE;
+            g_stagedate.knives[i].y = g_stagedate.hero.y;
+            g_stagedate.knives[i].x = g_stagedate.hero.x + IMG_CHIPSIZE;
+        }
+    }
+    //ナイフの描画と移動
+    float mv = g_frametime * 350.0f;
+    for(int i = 0;i<MAX_KNIFE;i++){
+        if(g_stagedate.knives[i].living == FALSE)continue;
+        if(g_stagedate.hero.turn == TURE){//左
+            g_stagedate.knives[i].x -= mv;
+        }else{
+            g_stagedate.knives[i].x += mv;
+        }
+        g_stagedate.knives[i].x += mv;
+        //マップ当たり判定
+        AtariInfo atari = CheckBlock(g_stagedate.knives[i].x,g_stagedate.knives[i].y,g_stagedate.knives[i].x);
+        if(atari.DR==TRUE||atari.UR==TRUE)g_stagedate.knives[i].living = FALSE;//当たったら消滅
+        if(g_stagedate.knives[i].x > g_stagedate.scrollx + 1000)g_stagedate.knives[i].living = FALSE;//画面外に出たら消滅
+
+        DrawGraph((int)(g_stagedate.knives[i].x - g_stagedate.scrollx),(int)g_stagedate.knives[i].y,g_imghandles.knife,TRUE);
+    }
+}
+BOOL isBKeyTrigger(int key){
+    if(key&PAD_INPUT_B){
+        if(g_isbkey_prev == FALSE){
+            g_isbkey_prev == TRUE;
+            return TRUE;
+        }
+    }else{
+        b_isbkey_prev = FALSE;
+    }
+    return FALSE;
 }

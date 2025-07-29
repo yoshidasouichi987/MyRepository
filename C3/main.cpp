@@ -29,7 +29,7 @@ int WINAPI WinMain(HINSTANCE h1,HIMSTANCE hp,LPSTR lpC,int nC){
         g_lasttime = curtime;
         switch(g_gamestate){
         case GAME_TITLE:DrawGameTitle();break;
-        case GAME_MAIN:DrawGameMain();break;
+        case GAME_MAIN:GameMain();break;
         case GAME_OVER:DrawGameOver();break;
         case GAME_CLEAR:DrawGameClear();break;
         }

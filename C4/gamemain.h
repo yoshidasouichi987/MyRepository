@@ -15,6 +15,7 @@
 #define GRAVITY 30.0f
 #define JUMP_FORWARD 200.0f
 #define MAX_ENEMY 25
+#define MAX_KNIFE 4
 
 extern char g_mapdate[MAP_HEIGHT][MAP_WIDTH+1];
 struct CharaDate{
@@ -34,6 +35,8 @@ struct StageDate{
     CharaDate hero; 
     float scrollx//画面左端の座標
     CharaDate enemies[MAX_ENEMY];
+    CharaDate knives[MAX_ENEMY];
+    BOOL g_bkey_prev;
 };
 extern StageDate g_stagedate;
 struct AtariInfo{
@@ -49,4 +52,6 @@ void InitStage();
 void DrawHero(int ac);
 void DrawMap();
 AtariInfo CheckBlock(float x,float y,float rx);
+void DrawKnife(int key);
+BOOL isBkeyTrigger(int key);
 #endif

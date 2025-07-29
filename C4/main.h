@@ -16,7 +16,7 @@ extern int middlefont;
 extern int largefont;
 extern BOOL g_akey_prev;
 
-void DrawGameMain();
+void GameMain();
 void DrawGameTitle();
 void DrawGameOver();
 void DrawGameClear();

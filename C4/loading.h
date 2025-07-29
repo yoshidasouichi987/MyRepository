@@ -9,5 +9,12 @@ struct ImageHandles{
     int title;
 };
 extern ImageHandles g_imghandles;
+struct SoundHandles{
+    int bgm;
+    int gameover;
+    int attack;
+    int bullet;
+}
+extern SoundHandles g_sndhandles;
 BOOL LoadGameImage();
 #endif

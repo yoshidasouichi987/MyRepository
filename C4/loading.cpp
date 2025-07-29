@@ -8,5 +8,10 @@ BOOL LoadGameImage(){
     if((g_imghandles.bullet = LoadGraph("フォルダ名¥¥ファイル名"))==-1)return FALSE;
     if((g_imghandles.knife = LoadGraph("フォルダ名¥¥ファイル名"))==-1)return FALSE;
     if((g_imghandles.title = LoadGraph("フォルダ名¥¥ファイル名"))==-1)return FALSE;
+
+    if((g_sndhandles.bgm = LoadSoundMem("フォルダ名¥¥ファイル名")) == -1)return FALSE;
+    if((g_sndhandles.bullet = LoadSoundMem("フォルダ名¥¥ファイル名")) == -1)return FALSE;
+    if((g_sndhandles.attack = LoadSoundMem("フォルダ名¥¥ファイル名")) == -1)return FALSE;
+    if((g_sndhandles.gameover = LoadSoundMem("フォルダ名¥¥ファイル名")) == -1)return FALSE;
     return TRUE;
 }

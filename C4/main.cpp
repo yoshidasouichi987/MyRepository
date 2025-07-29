@@ -25,7 +25,7 @@ int WINAPI WinMain(HINSTANCE h1,HIMSTANCE hp,LPSTR lpC,int nC){
 
         switch(g_gamestate){
             case GAME_TITLE:DrawGameTitle();break;
-            case GAME_MAIN:DrawGameMain();break;
+            case GAME_MAIN:GameMain();break;
             case GAME_CLEAR:DrawGameClear();break;
             case GAME_OVER:DrawGameOver();break;
         }
@@ -58,4 +58,25 @@ void DrawMap(){
             }
         }
     }
+}
+void DrawGameOver(){
+    StopSoundMem(g_sndhandles.bgm);
+    DrawBox(0,0,800,600,GetColor(0,0,0),TRUE);
+    DrawStringToHandle(100,200,"ゲームオーバー",GetColor(255,0,0),g_largefont);
+    if(g_lasttime - g_timerstart > 5000)g_gamestate = GAME_TITLE;
+}
+void DrawGameClear(){
+    DrawBox(0,0,800,600,GetColor(255,255,255),TRUE);
+    DrawStringToHandle(100,200,"ゲームクリア",GetColor(0,0,255),g_largefont);
+    if(g_lasttime - g_timerstart > 5000){
+        g_stagedate.stagenum++;
+        g_stagedate.stagenum %= MAXSTAGE;
+        if(g_stagedate.stagenum==0){
+            g_gamestate = GAME_TITLE;
+        }else{
+            g_gamestate = GAME_MAIN;
+            InitStage();
+        }
+    }
+
 }

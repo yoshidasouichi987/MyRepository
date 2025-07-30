@@ -12,11 +12,11 @@ enum GameState{
 }
 extern GameState g_gamestate;
 
-extern int middlefont;
-extern int largefont;
+extern int g_middlefont;
+extern int g_largefont;
 extern BOOL g_akey_prev;
 
-void GameMain();
+void DrawGameMain();
 void DrawGameTitle();
 void DrawGameOver();
 void DrawGameClear();

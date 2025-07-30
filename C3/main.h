@@ -21,8 +21,8 @@ extern int g_middlefont;
 extern int g_largefont;
 //関数プロトタイプ宣言
 void DrawGameTitle();
-void DrawGameMain();
+void GameMain();
 void DrawGameClear();
 void DrawGameOver();
-BOOL IsAKeyTrigger(int key);
+BOOL isAKeyTrigger(int key);
 #endif

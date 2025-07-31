@@ -14,7 +14,7 @@ struct SoundHandles{
     int gameover;
     int attack;
     int bullet;
-}
+};
 extern SoundHandles g_sndhandles;
 BOOL LoadGameImage();
 #endif
